@@ -11,7 +11,7 @@ class AdminsController {
 
     try {
       // Verificar el código para registrar
-      if (secret !== registry_secret) return res.status(401).json({ status: 401, message: 'Código incorrecto' });
+      if (secret !== registry_secret) return res.status(401).json({ status: 401, message: 'Código incorrecto.' });
 
       // Verificar si el administrador ya existe en la base de datos
       const adminExisting = await adminsModel.getByUsername(username);
@@ -64,9 +64,9 @@ class AdminsController {
       // Eliminar el token de la base de datos de tokens válidos
       await tokensModel.delete(token);
 
-      res.status(200).json({ status: 200, message: 'Sesión cerrada correctamente' });
+      res.status(200).json({ status: 200, message: 'Sesión cerrada exitosamente.' });
     } catch (error) {
-      res.status(500).json({ status: 500, message: 'Error al cerrar sesión:', error: error });
+      res.status(500).json({ status: 500, message: `Error al cerrar sesión: ${error.message}` });
     }
   }
 }

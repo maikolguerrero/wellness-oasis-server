@@ -3,7 +3,7 @@ const query = require('../../config/query'); // Importamos la función para real
 class TokensModel {
   // Guardar un token válido en la base de datos
   async add(token) {
-    const sql = 'INSERT INTO tokens (id_user, token) VALUES (?, ?)';
+    const sql = 'INSERT INTO tokens (user_id, token) VALUES (?, ?)';
     const values = [token.userId, token.token];
     try {
       const response = await query(sql, values);
