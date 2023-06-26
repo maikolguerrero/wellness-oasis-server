@@ -13,6 +13,7 @@ app.set('port', port); // Establecer el puerto
 // Rutas de la app
 app.use('/admin', require('./routes/admins.routes'));
 app.use('/services', require('./routes/services.routes'));
+app.use('/bookings', require('./routes/bookings.routes'));
 
 // Definir la ruta para mostrar las imágenes
 app.use('/images', express.static(path.join(__dirname, '../static/images')));
