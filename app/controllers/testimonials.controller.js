@@ -4,9 +4,9 @@ const testimonialsModel = require('../models/testimonials.model');
 class TestimonialsController {
   // Agregar un testimonio
   async add(req, res) {
-    const { name, email, testimonial } = req.body;
-
     try {
+      const { name, email, testimonial } = req.body;
+
       const newTestimonialId = await testimonialsModel.add({ name, email, testimonial });
       res.status(201).json({ status: 201, message: 'Testimonio agregado exitosamente.', data: { id: newTestimonialId } });
     } catch (error) {
@@ -26,9 +26,9 @@ class TestimonialsController {
 
   // Obtener un testimonio por ID
   async getById(req, res) {
-    const id = req.params.id;
-
     try {
+      const id = req.params.id;
+
       const testimonial = await testimonialsModel.getById(id);
       if (!testimonial) return res.status(404).json({ status: 404, message: 'Testimonio no encontrado.' });
 
@@ -40,10 +40,10 @@ class TestimonialsController {
 
   // Actualizar un testimonio por ID
   async updateById(req, res) {
-    const id = req.params.id;
-    const { name, email, testimonial } = req.body;
-
     try {
+      const id = req.params.id;
+      const { name, email, testimonial } = req.body;
+
       // Verificar si el testimonio existe
       const existingTestimonial = await testimonialsModel.getById(id);
       if (!existingTestimonial) return res.status(404).json({ status: 404, message: 'Testimonio no encontrado.' });
@@ -59,9 +59,9 @@ class TestimonialsController {
 
   // Eliminar un testimonio por ID
   async deleteById(req, res) {
-    const id = req.params.id;
-
     try {
+      const id = req.params.id;
+
       // Verificar si el testimonio existe
       const existingTestimonial = await testimonialsModel.getById(id);
       if (!existingTestimonial) return res.status(404).json({ status: 404, message: 'Testimonio no encontrado.' });

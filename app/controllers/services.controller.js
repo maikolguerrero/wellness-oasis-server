@@ -5,21 +5,21 @@ const { deleteImage } = require('../../config/multer');
 class ServicesController {
   // Crear un nuevo servicio
   async add(req, res) {
-    const { name, description, price, is_promotion, discount } = req.body;
-
-    // Obtenemos la ruta de la imagen
-    const imagePath = req.file.path;
-    // Obtenemos el nombre de la imagen
-    const image = path.basename(imagePath);
-
-    // Verificar si ya existe un servicio con el mismo nombre
-    const existingName = await servicesController.getByName(name);
-    if (existingName) {
-      deleteImage(imagePath);
-      return res.status(400).json({ status: 400, message: 'Ya existe un servicio con ese nombre.' });
-    }
-
     try {
+      const { name, description, price, is_promotion, discount } = req.body;
+
+      // Obtenemos la ruta de la imagen
+      const imagePath = req.file.path;
+      // Obtenemos el nombre de la imagen
+      const image = path.basename(imagePath);
+
+      // Verificar si ya existe un servicio con el mismo nombre
+      const existingName = await servicesModel.getByName(name);
+      if (existingName) {
+        deleteImage(imagePath);
+        return res.status(400).json({ status: 400, message: 'Ya existe un servicio con ese nombre.' });
+      }
+
       // Crear el nuevo servicio
       const newService = { name, description, price, image, is_promotion, discount };
       const newServiceId = await servicesModel.add(newService);
@@ -43,9 +43,8 @@ class ServicesController {
 
   // Obtener un servicio por ID
   async getById(req, res) {
-    const id = req.params.id;
-
     try {
+      const id = req.params.id;
       const service = await servicesModel.getById(id);
       if (!service) return res.status(404).json({ status: 404, message: 'Servicio no encontrado.' });
 
@@ -58,9 +57,9 @@ class ServicesController {
 
   // Obtener un servicio por nombre
   async getByName(req, res) {
-    const name = req.params.name;
-
     try {
+      const name = req.params.name;
+
       const service = await servicesModel.getByName(name);
       if (!service) return res.status(404).json({ status: 404, message: 'Servicio no encontrado.' });
       res.status(200).json({ status: 200, message: 'Servicio encontrado.', data: { service } });
@@ -71,18 +70,27 @@ class ServicesController {
 
   // Editar un servicio por ID
   async updateById(req, res) {
-    const id = req.params.id;
-    const { name, description, price, is_promotion, discount } = req.body;
-
-    // Verificar si el servicio existe
-    const existingService = await servicesModel.getById(id);
-    if (!existingService) return res.status(404).json({ status: 404, message: 'Servicio no encontrado.' });
-
-    // Obtener la ruta de la imagen
-    const folder = `../../static/images/${existingService.image}`;
-    const imagePath = req.file?.path ?? path.join(__dirname, folder);
-
     try {
+      const id = req.params.id;
+      const { name, description, price, is_promotion, discount } = req.body;
+
+      // Verificar si el servicio existe
+      const existingService = await servicesModel.getById(id);
+      if (!existingService) return res.status(404).json({ status: 404, message: 'Servicio no encontrado.' });
+
+      // Obtener la ruta de la imagen
+      const folder = `../../static/images/${existingService.image}`;
+      const imagePath = req.file?.path ?? path.join(__dirname, folder);
+
+      // Verificar si ya existe un servicio con el mismo nombre
+      if (name && name !== existingService.name) {
+        const existingName = await servicesModel.getByName(name);
+        if (existingName) {
+          deleteImage(imagePath);
+          return res.status(400).json({ status: 400, message: 'Ya existe un servicio con ese nombre.' });
+        }
+      }
+
       // Eliminar imagen anterior si se va a actualizar
       if (req.file && req.file?.path) {
         const imageExisting = path.join(__dirname, folder);
@@ -114,9 +122,8 @@ class ServicesController {
 
   // Eliminar un servicio por ID
   async deleteById(req, res) {
-    const id = req.params.id;
-
     try {
+      const id = req.params.id;
 
       // Verificar si el servicio existe
       const existingService = await servicesModel.getById(id);

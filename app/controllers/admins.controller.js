@@ -7,9 +7,9 @@ const tokensModel = require('../models/tokens.model'); // Importamos el modelo d
 class AdminsController {
   // Crear un nuevo administrador
   async add(req, res) {
-    const { username, password, secret } = req.body;
-
     try {
+      const { username, password, secret } = req.body;
+
       // Verificar el código para registrar
       if (secret !== registry_secret) return res.status(401).json({ status: 401, message: 'Código incorrecto.' });
 
@@ -33,9 +33,9 @@ class AdminsController {
 
   // Iniciar sesión
   async login(req, res) {
-    const { username, password } = req.body;
-
     try {
+      const { username, password } = req.body;
+
       // Verificar si el administrador existe en la base de datos
       const admin = await adminsModel.getByUsername(username);
       if (!admin) return res.status(401).json({ status: 401, message: 'Credenciales inválidas.' });
@@ -58,9 +58,9 @@ class AdminsController {
 
   // Cerrar sesión
   async logout(req, res) {
-    const token = req.headers.authorization?.split(' ')[1];
-
     try {
+      const token = req.headers.authorization?.split(' ')[1];
+
       // Eliminar el token de la base de datos de tokens válidos
       await tokensModel.delete(token);
 

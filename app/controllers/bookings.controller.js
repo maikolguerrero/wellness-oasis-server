@@ -4,9 +4,8 @@ const servicesModel = require('../models/services.model');
 class BookingsController {
   // Agregar Reserva
   async add(req, res) {
-    const { name, email, service_id, date, time } = req.body;
-
     try {
+      const { name, email, service_id, date, time } = req.body;
 
       // Verificar si el servicio existe
       const existingService = await servicesModel.getById(service_id);
@@ -31,9 +30,9 @@ class BookingsController {
 
   // Obtener reserva por ID
   async getById(req, res) {
-    const id = req.params.id;
-
     try {
+      const id = req.params.id;
+
       const booking = await bookingsModel.getById(id);
       if (!booking) return res.status(404).json({ status: 404, message: 'Reserva no encontrada.' });
 
@@ -45,10 +44,10 @@ class BookingsController {
 
   // Actualizar reserva por ID
   async updateByID(req, res) {
-    const id = req.params.id;
-    const { name, email, service_id, date, time } = req.body;
-
     try {
+      const id = req.params.id;
+      const { name, email, service_id, date, time } = req.body;
+
       // Verificar si la reserva existe
       const existingBooking = await bookingsModel.getById(id);
       if (!existingBooking) return res.status(404).json({ status: 404, message: 'Reserva no encontrada.' });
@@ -64,9 +63,9 @@ class BookingsController {
 
   // Eliminar reserva por ID
   async deleteByID(req, res) {
-    const id = req.params.id;
-
     try {
+      const id = req.params.id;
+
       // Verificar si la reserva existe
       const existingBooking = await bookingsModel.getById(id);
       if (!existingBooking) return res.status(404).json({ status: 404, message: 'Reserva no encontrada.' });
