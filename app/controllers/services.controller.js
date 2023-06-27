@@ -5,14 +5,14 @@ const { deleteImage } = require('../../config/multer');
 class ServicesController {
   // Crear un nuevo servicio
   async add(req, res) {
+    const { name, description, price, is_promotion, discount } = req.body;
+
+    // Obtenemos la ruta de la imagen
+    const imagePath = req.file.path;
+    // Obtenemos el nombre de la imagen
+    const image = path.basename(imagePath);
+
     try {
-      const { name, description, price, is_promotion, discount } = req.body;
-
-      // Obtenemos la ruta de la imagen
-      const imagePath = req.file.path;
-      // Obtenemos el nombre de la imagen
-      const image = path.basename(imagePath);
-
       // Verificar si ya existe un servicio con el mismo nombre
       const existingName = await servicesModel.getByName(name);
       if (existingName) {
@@ -112,10 +112,9 @@ class ServicesController {
 
       if (affectedRows > 0) return res.status(200).json({ status: 200, message: 'Servicio actualizado exitosamente.' });
 
-      deleteImage(imagePath)
+      deleteImage(imagePath);
       res.status(500).json({ status: 500, message: 'Error al actualizar el servicio.' });
     } catch (error) {
-      deleteImage(imagePath)
       res.status(500).json({ status: 500, message: `Error al actualizar el servicio: ${error.message}` });
     }
   }
