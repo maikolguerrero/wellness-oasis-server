@@ -59,7 +59,6 @@ class Token {
     try {
       // Obtener todos los tokens almacenados en la base de datos
       const tokens = await tokensModel.getAllTokens();
-      console.log(tokens);
 
       // Obtener la fecha actual
       const currentDate = new Date();
